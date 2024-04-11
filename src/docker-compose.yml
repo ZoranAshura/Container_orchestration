@@ -1,0 +1,159 @@
+services:
+  message_queue:
+    image: rabbitmq:3-management-alpine
+    networks:
+      mynet:
+        ipv4_address: 10.5.0.10
+  db:
+    image: database
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      mynet:
+        ipv4_address: 10.5.0.5
+  session_service:
+    image: session
+    ports:
+     - 8081:8081
+    networks:
+      mynet:
+        ipv4_address: 10.5.0.2
+    environment:
+      POSTGRES_HOST: 10.5.0.5
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: users_db
+    command: ./mvnw spring-boot:run;
+    depends_on:
+      - db
+  hotel_service:
+    image: hotel
+    networks:
+      mynet:
+        ipv4_address: 10.5.0.6
+    environment:
+      POSTGRES_HOST: 10.5.0.5
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hotels_db
+    command: ./mvnw spring-boot:run;
+    depends_on:
+      - db
+  payment_service:
+    image: payment
+    networks:
+      mynet:
+        ipv4_address: 10.5.0.7
+    environment:
+      POSTGRES_HOST: 10.5.0.5
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: payments_db
+    command: ./mvnw spring-boot:run;
+    depends_on:
+      - db
+  loyalty_service:
+    image: loyalty
+    networks:
+      mynet:
+        ipv4_address: 10.5.0.3
+    environment:
+      POSTGRES_HOST: 10.5.0.5
+      POSTGRES_PORT: 5432
+      POSTGRES_USER : postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: balances_db
+    command: ./mvnw spring-boot:run;
+    depends_on:
+      - db
+  report_service:
+    image: report
+    networks:
+      mynet:
+        ipv4_address: 10.5.0.8
+    environment:
+      POSTGRES_HOST: 10.5.0.5
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: statistics_db
+      RABBIT_MQ_HOST: 10.5.0.10
+      RABBIT_MQ_PORT: 5672
+      RABBIT_MQ_USER: guest
+      RABBIT_MQ_PASSWORD: guest
+      RABBIT_MQ_QUEUE_NAME: messagequeue
+      RABBIT_MQ_EXCHANGE: messagequeue-exchange
+    command: ./mvnw spring-boot:run;
+    depends_on:
+      - db
+      - message_queue
+  booking_service:
+    image: booking
+    networks:
+      mynet:
+        ipv4_address: 10.5.0.9
+    environment:
+      POSTGRES_HOST: 10.5.0.5
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: reservations_db
+      RABBIT_MQ_HOST: 10.5.0.10
+      RABBIT_MQ_PORT: 5672
+      RABBIT_MQ_USER: guest
+      RABBIT_MQ_PASSWORD: guest
+      RABBIT_MQ_QUEUE_NAME: messagequeue
+      RABBIT_MQ_EXCHANGE: messagequeue-exchange
+      HOTEL_SERVICE_HOST: 10.5.0.6
+      HOTEL_SERVICE_PORT: 8082
+      PAYMENT_SERVICE_HOST: 10.5.0.7
+      PAYMENT_SERVICE_PORT: 8084
+      LOYALTY_SERVICE_HOST: 10.5.0.3
+      LOYALTY_SERVICE_PORT: 8085
+    command: ./mvnw spring-boot:run;
+    depends_on:
+      - db
+      - message_queue
+      - hotel_service
+      - payment_service
+      - loyalty_service
+  gateway_service:
+    image: gateway
+    ports:
+      - 8087:8087
+    networks:
+      mynet:
+        ipv4_address: 10.5.0.4
+    environment:
+      SESSION_SERVICE_HOST: 10.5.0.2
+      SESSION_SERVICE_PORT: 8081
+      HOTEL_SERVICE_HOST: 10.5.0.6
+      HOTEL_SERVICE_PORT: 8082
+      BOOKING_SERVICE_HOST: 10.5.0.9
+      BOOKING_SERVICE_PORT: 8083
+      PAYMENT_SERVICE_HOST: 10.5.0.7
+      PAYMENT_SERVICE_PORT: 8084
+      LOYALTY_SERVICE_HOST: 10.5.0.3
+      LOYALTY_SERVICE_PORT: 8085
+      REPORT_SERVICE_HOST: 10.5.0.8
+      REPORT_SERVICE_PORT: 8086
+    depends_on:
+      - session_service
+      - hotel_service
+      - booking_service
+      - payment_service
+      - loyalty_service
+      - report_service
+    command: ./mvnw spring-boot:run;
+volumes:
+  postgres_data:
+networks:
+  mynet:
+    ipam:
+     driver: default
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1
