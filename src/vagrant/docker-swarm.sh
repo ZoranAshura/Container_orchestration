@@ -13,9 +13,10 @@ echo "sudo $token" > workers.sh
 chmod 777 workers.sh
 
 # Adding worker nodes to the Swarm
-sshpass -p "vagrant" ssh vagrant@172.16.1.50 'sudo systemctl start docker'
+ssh vagrant@172.16.1.50 'sudo systemctl start docker'
 sshpass -p "vagrant" scp workers.sh vagrant@172.16.1.50:/home/vagrant/
 sshpass -p "vagrant" ssh vagrant@172.16.1.50 '/home/vagrant/workers.sh'
-sshpass -p "vagrant" ssh vagrant@172.16.1.51 'sudo systemctl start docker'
+ssh vagrant@172.16.1.51 'sudo systemctl start docker'
 sshpass -p "vagrant" scp workers.sh vagrant@172.16.1.51:/home/vagrant/
 sshpass -p "vagrant" ssh vagrant@172.16.1.51 '/home/vagrant/workers.sh'
+~                                                                          

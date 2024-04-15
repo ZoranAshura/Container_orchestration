@@ -39,3 +39,32 @@
 #### Use the console to go inside the virtual machine and make sure that the source code is in place. Stop and destroy the virtual machine.
 ![1.9](./src/images/part_2/2.6.png)
 ![1.9](./src/images/part_2/2.7.png)
+
+## Part 3. Creating a simple docker swarm
+
+#### Modify Vagrantfile to create three machines: manager01, worker01, worker02. Write shell scripts to install docker inside machines, initialize and connect to docker swarm. Help on docker swarm is in the materials
+
+> You can find all the necessary files in the vagrant directory - /src/vagrant/
+
+#### Load the built images on the docker hub and modify the docker-compose file to load the images located on the docker hub
+![1.9](./src/images/part_3/3.1.png)
+
+#### Run virtual machines and move the docker-compose file to the manager. Run the service stack using the docker-compose file you wrote.
+![1.9](./src/images/part_3/3.2.png)
+![1.9](./src/images/part_3/3.3.png)
+
+#### Run the prepared tests through postman and make sure that they are all successful. Write the test results in the report.
+![1.9](./src/images/part_3/3.4.png)
+![1.9](./src/images/part_3/3.5.png)
+![1.9](./src/images/part_3/3.6.png)
+![1.9](./src/images/part_3/3.7.png)
+![1.9](./src/images/part_3/3.8.png)
+![1.9](./src/images/part_3/3.9.png)
+
+#### Using docker commands, show the distribution of containers by nodes in the report
+![1.9](./src/images/part_3/3.10.png)
+> Etc
+
+#### Install a separate Portainer stack inside the cluster. Show a visualization of the distribution of tasks over the nodes using the Portainer in the report.
+![1.9](./src/images/part_3/3.11.png)
+![1.9](./src/images/part_3/3.12.png)
