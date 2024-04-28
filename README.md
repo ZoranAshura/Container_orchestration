@@ -6,8 +6,6 @@
 ![1.1](./src/images/part_1/1.1.png)
 2. Dockerfile for the rest of microservices:
 ![1.2](./src/images/part_1/1.2.png)
-3. Size of the built images:
-![1.3](./src/images/part_1/1.3.png)
 
 #### Write a docker-compose file that performs a correct interaction of services. Forward ports to access the gateway service and session service from the local machine.
 > Check src folder
