@@ -25,7 +25,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: users_db
-    command: ./mvnw spring-boot:run
+    command: java -jar /app/app.jar
     depends_on:
       - db
   hotel_service:
@@ -40,7 +40,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: hotels_db
-    command: ./mvnw spring-boot:run
+    command: java -jar /app/app.jar
     depends_on:
       - db
   payment_service:
@@ -55,7 +55,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: payments_db
-    command: ./mvnw spring-boot:run
+    command: java -jar /app/app.jar
     depends_on:
       - db
   loyalty_service:
@@ -70,7 +70,7 @@ services:
       POSTGRES_USER : postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: balances_db
-    command: ./mvnw spring-boot:run
+    command: java -jar /app/app.jar
     depends_on:
       - db
   report_service:
@@ -91,7 +91,7 @@ services:
       RABBIT_MQ_PASSWORD: guest
       RABBIT_MQ_QUEUE_NAME: messagequeue
       RABBIT_MQ_EXCHANGE: messagequeue-exchange
-    command: ./mvnw spring-boot:run
+    command: java -jar /app/app.jar
     depends_on:
       - db
       - message_queue
@@ -119,7 +119,7 @@ services:
       PAYMENT_SERVICE_PORT: 8084
       LOYALTY_SERVICE_HOST: loyalty-service
       LOYALTY_SERVICE_PORT: 8085
-    command: ./mvnw spring-boot:run
+    command: java -jar /app/app.jar
     depends_on:
       - db
       - message_queue
@@ -145,7 +145,7 @@ services:
       LOYALTY_SERVICE_PORT: 8085
       REPORT_SERVICE_HOST: report-service
       REPORT_SERVICE_PORT: 8086
-    command: ./mvnw spring-boot:run
+    command: java -jar /app/app.jar
 volumes:
   postgres_data:
 networks:
